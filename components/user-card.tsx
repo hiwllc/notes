@@ -4,6 +4,7 @@ import type { User } from "next-auth";
 
 type Props = {
 	user: User;
+	notes?: number;
 };
 
 const getInitialFromName = (name: string) =>
@@ -13,7 +14,7 @@ const getInitialFromName = (name: string) =>
 		.map((word) => word.charAt(0))
 		.join("");
 
-export function UserButton({ user }: Props) {
+export function UserButton({ user, notes = 0 }: Props) {
 	return (
 		<div className="w-full flex items-start gap-2">
 			<Avatar>
@@ -26,12 +27,12 @@ export function UserButton({ user }: Props) {
 			<div className="space-y-1">
 				<p className="text-sm font-medium">{user.name}</p>
 
-				<div>
+				{notes > 0 ? (
 					<p className="text-xs inline-flex items-center gap-1">
-						{/* @todo implementar contador de notas deste usuário */}
-						<NotebookTextIcon className="size-4" /> 25 Notas
+						<NotebookTextIcon className="size-4" /> {notes} Nota
+						{notes > 1 ? "s" : ""}
 					</p>
-				</div>
+				) : null}
 			</div>
 		</div>
 	);

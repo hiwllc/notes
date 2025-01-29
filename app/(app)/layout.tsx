@@ -9,6 +9,15 @@ import { UserButton } from "@/components/user-card";
 import { NavMain } from "@/components/nav-main";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+
+async function getUserNotesCount(user?: string) {
+	if (!user) {
+		return 0;
+	}
+
+	return prisma.note.count({ where: { userId: user } });
+}
 
 export default async function AppLayout({
 	children,
@@ -16,6 +25,7 @@ export default async function AppLayout({
 	children: React.ReactNode;
 }>) {
 	const session = await auth();
+  const notes = await getUserNotesCount(session?.user?.id);
 
 	return (
 		<main className="w-full min-h-dvh">
@@ -68,7 +78,7 @@ export default async function AppLayout({
 
 					{session?.user ? (
 						<>
-							<UserButton user={session.user} />
+							<UserButton user={session.user} notes={notes} />
 							<NavMain />
 						</>
 					) : null}
