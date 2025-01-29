@@ -8,8 +8,6 @@ import {
 	CardTitle,
 } from "./ui/card";
 import Link from "next/link";
-import { Avatar } from "./ui/avatar";
-import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "./ui/button";
 import { HeartIcon, PenIcon, TrashIcon } from "lucide-react";
 
@@ -31,12 +29,6 @@ export function NoteCard({ note }: Props) {
 				</div>
 
 				<Link href="/users/wllc" className="flex items-center gap-2">
-					{/* @todo remover este avatar porque o z-index não está funcionando direito */}
-					<Avatar className="size-6 z-0 relative">
-						<AvatarImage src={note.owner.image.src} />
-						<AvatarFallback>{note.owner.name.at(0)}</AvatarFallback>
-					</Avatar>
-
 					<p>{note.owner.name}</p>
 				</Link>
 			</CardHeader>
