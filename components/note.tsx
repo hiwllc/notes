@@ -14,7 +14,7 @@ import { PenIcon, TrashIcon } from "lucide-react";
 import type { Note } from "@prisma/client";
 import { Badge } from "./ui/badge";
 import type { User } from "next-auth";
-import { deleteNoteAction } from "@/app/(app)/create/actions/delete";
+import { deleteNoteAction } from "@/actions/delete-note";
 import { useFormState } from "react-dom";
 import { SubmitButton } from "./submit-button";
 import {
@@ -27,7 +27,7 @@ import {
 	ConfirmDialogTitle,
 	ConfirmDialogTrigger,
 } from "./confirm";
-import { publishNoteAction } from "@/app/actions/publish-note";
+import { publishNoteAction } from "@/actions/publish-note";
 
 type Props = {
 	note: Note & { user: Pick<User, "email" | "name"> };

@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LoaderIcon } from "lucide-react";
 import type { Note } from "@prisma/client";
-import { updateNoteAction } from "../actions/update";
+import { updateNoteAction } from "@/actions/update-note";
 
 /** @todo make the schema unique to avoid duplication in actions */
 const noteSchema = z.object({

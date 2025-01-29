@@ -15,8 +15,8 @@ import { Switch } from "@/components/ui/switch";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createNoteAction } from "../actions/create";
 import { LoaderIcon } from "lucide-react";
+import { createNoteAction } from "@/actions/create-note";
 
 /** @todo make the schema unique to avoid duplication in actions */
 const noteSchema = z.object({
