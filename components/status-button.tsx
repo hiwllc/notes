@@ -1,20 +1,22 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
 import { Button, type ButtonProps } from "./ui/button";
 import { LoaderIcon } from "lucide-react";
 import { useFormState } from "react-hook-form";
 
-export function SubmitButton({
+/**
+ * This component exists because to loading status work we need to desctruct de formState
+ * from useForm hook, but since are using the Form component from shadcn.
+ */
+export function StatusButton({
 	children,
-	loading,
 	...props
 }: ButtonProps & { loading?: boolean }) {
-	const { pending } = useFormStatus();
+	const { isSubmitted } = useFormState();
 
 	return (
 		<Button size="sm" {...props}>
-			{pending || loading ? (
+			{isSubmitted ? (
 				<>
 					<LoaderIcon className="size-4 animate-spin" />
 				</>

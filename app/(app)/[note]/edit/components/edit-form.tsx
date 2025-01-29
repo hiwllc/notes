@@ -1,7 +1,6 @@
 "use client";
 
 import { Editor } from "@/components/editor";
-import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -15,9 +14,9 @@ import { Switch } from "@/components/ui/switch";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { LoaderIcon } from "lucide-react";
 import type { Note } from "@prisma/client";
 import { updateNoteAction } from "@/actions/update-note";
+import { StatusButton } from "@/components/status-button";
 
 /** @todo make the schema unique to avoid duplication in actions */
 const noteSchema = z.object({
@@ -92,21 +91,7 @@ export function EditNoteForm({ note }: Props) {
 					)}
 				/>
 
-				<Button
-					type="submit"
-					size="sm"
-					className="w-full"
-					disabled={form.formState.isSubmitting}
-				>
-					{form.formState.isSubmitting ? (
-						<>
-							<LoaderIcon className="size-4 animate-spin" />
-							<span className="sr-only">Alterando sua nota...</span>
-						</>
-					) : (
-						"Salvar e publicar"
-					)}
-				</Button>
+				<StatusButton className="w-full">Salvar e Publicar</StatusButton>
 			</form>
 		</Form>
 	);
