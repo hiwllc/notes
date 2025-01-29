@@ -13,4 +13,6 @@ export async function requireAuthenticatedUser() {
 	if (!session?.user?.id) {
 		return redirect("/login");
 	}
+
+  return session.user;
 }

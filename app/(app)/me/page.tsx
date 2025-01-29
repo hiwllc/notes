@@ -1,9 +1,29 @@
-import { notes } from "@/app/mock";
 import { NoteCard } from "@/components/note";
+import { prisma } from "@/lib/prisma";
 import { requireAuthenticatedUser } from "@/lib/utils";
 
+async function getAllNotesFromUser(user: string) {
+	return prisma.note.findMany({
+		where: {
+			userId: user,
+		},
+		include: {
+			user: {
+				select: {
+					name: true,
+					email: true,
+				},
+			},
+		},
+		orderBy: {
+			createdAt: "desc",
+		},
+	});
+}
+
 export default async function ProfilePage() {
-	await requireAuthenticatedUser();
+	const { id } = await requireAuthenticatedUser();
+	const notes = await getAllNotesFromUser(id as string);
 
 	return (
 		<section className="space-y-10">
@@ -11,7 +31,7 @@ export default async function ProfilePage() {
 
 			<div className="columns-[280px] gap-6 md:columns-xs lg:columns-md pb-6">
 				{notes.map((note) => (
-					<NoteCard key={note.id} note={note} />
+					<NoteCard key={note.id} note={note} isOwner />
 				))}
 			</div>
 		</section>
