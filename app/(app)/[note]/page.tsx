@@ -36,7 +36,7 @@ export default async function NotePage({ params }: Props) {
 
 	return (
 		<section className="space-y-10">
-			<div className="columns-[280px] gap-6 md:columns-xs lg:columns-md pb-24 lg:pb-6">
+			<div className="gap-6 pb-24 lg:pb-6">
 				<NoteCard note={note} isOwner={session?.user?.id === note.userId} />
 			</div>
 		</section>

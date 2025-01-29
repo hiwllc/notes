@@ -69,7 +69,7 @@ export function NoteCard({ note, isOwner }: Props) {
 								variant="ghost"
 								asChild
 							>
-								<Link href="/id/edit">
+								<Link href={`/${note.id}/edit`}>
 									<PenIcon className="size-4" />
 									<span className="sr-only">Editar Nota</span>
 								</Link>
