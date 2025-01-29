@@ -19,6 +19,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  notes         Note[]
 }
 
 model Account {
@@ -54,4 +55,28 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+enum NoteVisibility {
+  PRIVATE
+  PUBLIC
+}
+
+enum NoteStatus {
+  PUBLISHED
+  DRAFT
+}
+
+model Note {
+  id         String         @id @default(cuid())
+  title      String
+  content    String
+  visibility NoteVisibility @default(PUBLIC)
+  status     NoteStatus     @default(DRAFT)
+  userId     String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
 }

@@ -20,7 +20,7 @@ export default async function AppLayout({
 	return (
 		<main className="w-full min-h-dvh">
 			<header className="sticky top-0 bg-background z-20 lg:h-20">
-				<div className="container grid grid-rows-2 py-4 gap-2 md:grid-cols-[1fr_232px]">
+				<div className="container grid grid-rows-2 md:grid-rows-1 py-4 gap-2 md:grid-cols-[1fr_232px]">
 					<h1 className="text-sm font-medium row-start-1">
 						<Link href="/" className="flex items-center gap-2">
 							<NotebookTextIcon className="size-4" />

@@ -13,8 +13,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { createNoteAction } from "../actions/create";
+import { LoaderIcon } from "lucide-react";
 
+/** @todo make the schema unique to avoid duplication in actions */
 const noteSchema = z.object({
 	title: z.string().min(1, "Sua nota precisa de um nome"),
 	content: z.string(),
@@ -28,11 +32,16 @@ export function CreateNoteForm() {
 			content: "",
 			visibility: true,
 		},
+		resolver: zodResolver(noteSchema),
 	});
+
+  const submit = (data: z.infer<typeof noteSchema>) => {
+			createNoteAction(data);
+		};
 
 	return (
 		<Form {...form}>
-			<form className="space-y-4">
+			<form className="space-y-4" onSubmit={form.handleSubmit(submit)}>
 				<FormField
 					control={form.control}
 					name="title"
@@ -76,8 +85,20 @@ export function CreateNoteForm() {
 					)}
 				/>
 
-				<Button type="submit" size="sm" className="w-full">
-					Criar Nota
+				<Button
+					type="submit"
+					size="sm"
+					className="w-full"
+					disabled={form.formState.isSubmitting}
+				>
+					{form.formState.isSubmitting ? (
+						<>
+							<LoaderIcon className="size-4 animate-spin" />
+							<span className="sr-only">Criando sua nota...</span>
+						</>
+					) : (
+						"Criar Nota"
+					)}
 				</Button>
 			</form>
 		</Form>

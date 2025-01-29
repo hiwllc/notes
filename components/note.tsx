@@ -10,54 +10,60 @@ import {
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { HeartIcon, PenIcon, TrashIcon } from "lucide-react";
+import type { Note } from "@prisma/client";
 
 type Props = {
-	note: (typeof notes)[number];
+	note: Note;
+	isOwner?: boolean;
 };
 
-export function NoteCard({ note }: Props) {
-  return (
-			<Card className="mb-6 overflow-hidden">
-				<CardHeader className="flex flex-row items-start justify-between">
-					<div>
-						<CardTitle>{note.title}</CardTitle>
-						<CardDescription>
-							{note.updatedAt.toLocaleDateString("pt-BR", {
-								dateStyle: "short",
-							})}
-						</CardDescription>
-					</div>
+export function NoteCard({ note, isOwner }: Props) {
+	return (
+		<Card className="mb-6 overflow-hidden">
+			<CardHeader className="flex flex-row items-start justify-between">
+				<div>
+					<CardTitle>{note.title}</CardTitle>
+					<CardDescription>
+						{(note.updatedAt || note.createdAt).toLocaleDateString("pt-BR", {
+							dateStyle: "short",
+						})}
+					</CardDescription>
+				</div>
 
-					<Link href="/users/wllc" className="flex items-center gap-2">
+				{/* <Link href="/users/wllc" className="flex items-center gap-2">
 						<p>{note.owner.name}</p>
-					</Link>
-				</CardHeader>
+					</Link> */}
+			</CardHeader>
 
-				<CardContent>
-					<p>{note.content}</p>
-				</CardContent>
+			<CardContent>
+				{/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
+				<div dangerouslySetInnerHTML={{ __html: note.content }} />
+			</CardContent>
 
-				<CardFooter className="justify-between">
-					<Button size="sm" variant="ghost">
-						<HeartIcon className="size-4" /> 18
-					</Button>
+			<CardFooter className="justify-between">
+				{/* @todo implement likes */}
+				{/* <Button size="sm" variant="ghost">
+					<HeartIcon className="size-4" /> 18
+				</Button> */}
 
+				{isOwner ? (
 					<div className="flex gap-2">
 						<Button size="icon" className="size-8 p-0" variant="ghost" asChild>
 							<Link href="/id/edit">
 								<PenIcon className="size-4" />
-								<span className="sr-only">Editar Nora</span>
+								<span className="sr-only">Editar Nota</span>
 							</Link>
 						</Button>
 
 						<Button size="icon" className="size-8 p-0" variant="ghost" asChild>
 							<Link href="/id/edit">
 								<TrashIcon className="size-4" />
-								<span className="sr-only">Excluir Nora</span>
+								<span className="sr-only">Excluir Nota</span>
 							</Link>
 						</Button>
 					</div>
-				</CardFooter>
-			</Card>
-		);
+				) : null}
+			</CardFooter>
+		</Card>
+	);
 }
