@@ -15,6 +15,14 @@ async function getNote(id: string, user?: string) {
 			id,
 			OR: [{ visibility: "PUBLIC", status: "PUBLISHED" }, { userId: user }],
 		},
+		include: {
+			user: {
+				select: {
+					name: true,
+					email: true,
+				},
+			},
+		},
 	});
 }
 
