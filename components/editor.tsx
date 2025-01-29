@@ -3,7 +3,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
-import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { BoldIcon, ItalicIcon, UnderlineIcon } from "lucide-react";
 import { Button } from "./ui/button";
 

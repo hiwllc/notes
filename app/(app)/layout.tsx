@@ -5,15 +5,18 @@ import {
 	SunIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import { UserButton } from "@/components/user-card";
+import { UserButton } from "@/components/user-card";
 import { NavMain } from "@/components/nav-main";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
 
-export default function AppLayout({
+export default async function AppLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const session = await auth();
+
 	return (
 		<main className="w-full min-h-dvh">
 			<header className="sticky top-0 bg-background z-20 lg:h-20">
@@ -21,7 +24,7 @@ export default function AppLayout({
 					<h1 className="text-sm font-medium row-start-1">
 						<Link href="/" className="flex items-center gap-2">
 							<NotebookTextIcon className="size-4" />
-							overnotes
+							overnote
 						</Link>
 					</h1>
 
@@ -48,22 +51,27 @@ export default function AppLayout({
 
 			<section className="container grid gap-10 h-[calc(100dvh-160px)] py-10 lg:grid-cols-[260px_1fr] lg:h-[calc(100dvh-140px)]">
 				<aside className="gap-2 sticky top-0">
-					<div className="bg-muted-foreground/5 rounded-md p-4 space-y-6">
-						<p className="text-sm font-medium text-foreground/80">
-							Faça login ou crie sua conta para criar suas notas.
-						</p>
+					{!session ? (
+						<div className="fixed lg:static bottom-0 left-0 bg-background lg:bg-muted-foreground/5 border-t lg:border-0 text-center lg:text-left rounded-t-md lg:rounded-md p-4 space-y-3 w-full">
+							<p className="text-sm font-medium text-foreground/80">
+								Faça login ou crie sua conta para criar suas notas.
+							</p>
 
-						<Button size="sm" className="group" asChild>
-							<Link href="/login">
-								Login{" "}
-								<MoveRightIcon className="size-4 group-hover:translate-x-1 transition-transform" />
-							</Link>
-						</Button>
-					</div>
+							<Button size="sm" className="group" asChild>
+								<Link href="/login">
+									Login{" "}
+									<MoveRightIcon className="size-4 group-hover:translate-x-1 transition-transform" />
+								</Link>
+							</Button>
+						</div>
+					) : null}
 
-					{/* <UserButton /> */}
-
-					<NavMain />
+					{session?.user ? (
+						<>
+							<UserButton user={session.user} />
+							<NavMain />
+						</>
+					) : null}
 				</aside>
 
 				{children}

@@ -66,7 +66,7 @@ export function SignupForm({
         return;
       }
 
-      router.push("/dashboard");
+      router.push("/");
       router.refresh();
     } catch (error) {
       console.error(error);

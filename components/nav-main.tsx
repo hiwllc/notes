@@ -1,11 +1,6 @@
 import Link from "next/link";
-import {
-	LogOutIcon,
-	NewspaperIcon,
-	NotebookPenIcon,
-	UserIcon,
-} from "lucide-react";
-import { Button } from "./ui/button";
+import { NewspaperIcon, NotebookPenIcon, UserIcon } from "lucide-react";
+import { SignOutButton } from "./signout-button";
 
 const items = [
 	{ title: "Feed", url: "/", icon: <NewspaperIcon className="size-4" /> },
@@ -30,14 +25,7 @@ export function NavMain() {
 				</Link>
 			))}
 
-			<Button
-				size="sm"
-				variant="ghost"
-				className="w-fit h-12 justify-center flex-1 lg:flex-auto"
-			>
-				<LogOutIcon className="size-4" />{" "}
-				<span className="hidden lg:inline">Sair</span>
-			</Button>
+			<SignOutButton />
 		</nav>
 	);
 }

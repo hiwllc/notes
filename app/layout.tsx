@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "Overnotes",
+	title: "Overnote",
 	description: "Crie e compartilhe suas notas",
 };
 

@@ -1,7 +1,10 @@
 import { notes } from "@/app/mock";
 import { NoteCard } from "@/components/note";
+import { requireAuthenticatedUser } from "@/lib/utils";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+	await requireAuthenticatedUser();
+
 	return (
 		<section className="space-y-10">
 			<h2 className="text-xl font-black text-foreground/80">Suas Notas</h2>
