@@ -8,9 +8,16 @@ async function getAllNotes(user?: string) {
 		where: {
 			OR: [{ visibility: "PUBLIC", status: "PUBLISHED" }, { userId: user }],
 		},
-		include: {
+		select: {
+			id: true,
+			title: true,
+			content: true,
+			createdAt: true,
+			status: true,
+			visibility: true,
 			user: {
 				select: {
+					id: true,
 					name: true,
 					email: true,
 				},
@@ -49,7 +56,7 @@ export default async function Home() {
 					<NoteCard
 						key={note.id}
 						note={note}
-						isOwner={session?.user?.id === note.userId}
+						isOwner={session?.user?.id === note.user.id}
 					/>
 				))}
 			</div>

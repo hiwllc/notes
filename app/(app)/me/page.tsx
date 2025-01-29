@@ -8,9 +8,16 @@ async function getAllNotesFromUser(user: string) {
 		where: {
 			userId: user,
 		},
-		include: {
+		select: {
+			id: true,
+			title: true,
+			content: true,
+			createdAt: true,
+			status: true,
+			visibility: true,
 			user: {
 				select: {
+					id: true,
 					name: true,
 					email: true,
 				},

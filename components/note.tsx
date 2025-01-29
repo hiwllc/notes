@@ -30,7 +30,10 @@ import {
 import { publishNoteAction } from "@/actions/publish-note";
 
 type Props = {
-	note: Note & { user: Pick<User, "email" | "name"> };
+	note: Pick<
+		Note,
+		"id" | "title" | "content" | "createdAt" | "status" | "visibility"
+	> & { user: Pick<User, "id" | "email" | "name"> };
 	isOwner?: boolean;
 };
 
@@ -46,12 +49,9 @@ export function NoteCard({ note, isOwner }: Props) {
 							<CardTitle>{note.title}</CardTitle>
 							<CardDescription>
 								<Link href={`/${note.id}`} className="hover:underline">
-									{(note.updatedAt || note.createdAt).toLocaleDateString(
-										"pt-BR",
-										{
-											dateStyle: "short",
-										},
-									)}
+									{note.createdAt.toLocaleDateString("pt-BR", {
+										dateStyle: "short",
+									})}
 								</Link>
 							</CardDescription>
 						</section>

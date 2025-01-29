@@ -27,7 +27,7 @@ const noteSchema = z.object({
 });
 
 type Props = {
-	note: Note;
+	note: Pick<Note, "id" | "title" | "content" | "visibility">;
 };
 
 export function EditNoteForm({ note }: Props) {

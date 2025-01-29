@@ -15,6 +15,12 @@ async function getNote(id: string, user: string) {
 			id,
 			userId: user,
 		},
+		select: {
+			id: true,
+			title: true,
+			content: true,
+			visibility: true,
+		},
 	});
 }
 
