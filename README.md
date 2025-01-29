@@ -15,3 +15,18 @@ Caso precisem de ajuda, ou tenham alguma sugestão, podem entrar em contato atra
 
 - Email: [pessoas@overlens.com.br](mailto:pessoas@overlens.com.br)
 - WhatsApp: [+5531996191047](https://wa.me/5531996191047)
+
+## TODO
+Editor Rich Text WYSIWYG
+Autosave durante edição
+Feed de anotações geral
+Feed de anotações do usuário
+Visibilidade pública/privada
+Link de acesso público para a anotação
+
+-> Rotas
+ -> / lista o feed público
+ -> /login
+ -> /signup
+ -> /me (perfil do usuário com as notas dele)
+ -> /:id (id publico de uma nota)

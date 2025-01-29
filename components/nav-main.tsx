@@ -12,7 +12,7 @@ const items = [
 	{ title: "Perfil", url: "/me", icon: <UserIcon className="size-4" /> },
 	{
 		title: "Criar Nota",
-		url: "/me",
+		url: "/create",
 		icon: <NotebookPenIcon className="size-4" />,
 	},
 ];

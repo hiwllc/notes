@@ -11,7 +11,7 @@ import Link from "next/link";
 import { Avatar } from "./ui/avatar";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "./ui/button";
-import { HeartIcon } from "lucide-react";
+import { HeartIcon, PenIcon, TrashIcon } from "lucide-react";
 
 type Props = {
 	note: (typeof notes)[number];
@@ -45,10 +45,26 @@ export function NoteCard({ note }: Props) {
 				<p>{note.content}</p>
 			</CardContent>
 
-			<CardFooter>
+			<CardFooter className="justify-between">
 				<Button size="sm" variant="ghost">
 					<HeartIcon className="size-4" /> 18
 				</Button>
+
+				<div className="flex gap-2">
+					<Button size="icon" className="size-8 p-0" variant="ghost" asChild>
+						<Link href="/id/edit">
+							<PenIcon className="size-4" />
+							<span className="sr-only">Editar Nora</span>
+						</Link>
+					</Button>
+
+					<Button size="icon" className="size-8 p-0" variant="ghost" asChild>
+						<Link href="/id/edit">
+							<TrashIcon className="size-4" />
+							<span className="sr-only">Excluir Nora</span>
+						</Link>
+					</Button>
+				</div>
 			</CardFooter>
 		</Card>
 	);
