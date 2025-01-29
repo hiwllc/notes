@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	Card,
 	CardContent,
@@ -12,6 +14,30 @@ import { PenIcon, TrashIcon } from "lucide-react";
 import type { Note } from "@prisma/client";
 import { Badge } from "./ui/badge";
 import type { User } from "next-auth";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "./ui/dialog";
+import { useActionState } from "react";
+import { deleteNoteAction } from "@/app/(app)/create/actions/delete";
+import { useFormState } from "react-dom";
+import { SubmitButton } from "./submit-button";
+import {
+	ConfirmDialog,
+	ConfirmDialogClose,
+	ConfirmDialogContent,
+	ConfirmDialogDescription,
+	ConfirmDialogFooter,
+	ConfirmDialogHeader,
+	ConfirmDialogTitle,
+	ConfirmDialogTrigger,
+} from "./confirm";
 
 type Props = {
 	note: Note & { user: Pick<User, "email" | "name"> };
@@ -19,6 +45,8 @@ type Props = {
 };
 
 export function NoteCard({ note, isOwner }: Props) {
+  const [_, action] = useFormState(deleteNoteAction, undefined);
+
 	return (
 		<Card className="mb-6 overflow-hidden">
 			<CardHeader className="flex flex-row items-center justify-between">
@@ -75,17 +103,44 @@ export function NoteCard({ note, isOwner }: Props) {
 								</Link>
 							</Button>
 
-							<Button
-								size="icon"
-								className="size-8 p-0"
-								variant="ghost"
-								asChild
-							>
-								<Link href="/id/edit">
-									<TrashIcon className="size-4" />
-									<span className="sr-only">Excluir Nota</span>
-								</Link>
-							</Button>
+							<ConfirmDialog>
+								<ConfirmDialogTrigger>
+									<Button size="icon" className="size-8 p-0" variant="ghost">
+										<TrashIcon className="size-4" />
+										<span className="sr-only">Excluir Nota</span>
+									</Button>
+								</ConfirmDialogTrigger>
+
+								<ConfirmDialogContent>
+									<ConfirmDialogHeader>
+										<ConfirmDialogTitle>Excluir nota</ConfirmDialogTitle>
+										<ConfirmDialogDescription>
+											Você está excluindo a nota {note.title} essa ação não pode
+											ser desfeita, tem certeza que deseja excluir?
+										</ConfirmDialogDescription>
+									</ConfirmDialogHeader>
+
+									<ConfirmDialogFooter>
+										<ConfirmDialogClose>
+											<Button variant="secondary" size="sm">
+												Não quero excluir
+											</Button>
+										</ConfirmDialogClose>
+
+										<form action={action}>
+											<input name="id" value={note.id} hidden readOnly />
+
+											<SubmitButton
+												variant="destructive"
+												size="sm"
+												className="w-full lg:w-28"
+											>
+												Excluir
+											</SubmitButton>
+										</form>
+									</ConfirmDialogFooter>
+								</ConfirmDialogContent>
+							</ConfirmDialog>
 						</div>
 					</div>
 				) : null}
