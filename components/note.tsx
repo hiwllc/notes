@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import {
   CopyCheckIcon,
   CopyIcon,
+  EllipsisIcon,
   PenIcon,
   SendIcon,
   TrashIcon,
@@ -37,6 +38,14 @@ import { publishNoteAction } from "@/actions/publish-note";
 import { createNoteLinkAction } from "@/actions/create-note-link";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { useState, useEffect } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 type Props = {
   note: Pick<
@@ -115,38 +124,52 @@ export function NoteCard({ note, isOwner }: Props) {
                   </form>
                 ) : null}
 
-                <form action={createLinkAction}>
-                  <input name="id" value={note.id} hidden readOnly />
-
-                  <SubmitButton
-                    size="icon"
-                    className="size-8 p-0"
-                    variant="ghost"
-                  >
-                    <SendIcon className="size-4" />
-                    <span className="sr-only">Compartilhar esta nota</span>
-                  </SubmitButton>
-                </form>
-
-                <Button
-                  size="icon"
-                  className="size-8 p-0"
-                  variant="ghost"
-                  asChild
-                >
-                  <Link href={`/${note.id}/edit`}>
-                    <PenIcon className="size-4" />
-                    <span className="sr-only">Editar Nota</span>
-                  </Link>
-                </Button>
-
                 <ConfirmDialog>
-                  <ConfirmDialogTrigger>
-                    <Button size="icon" className="size-8 p-0" variant="ghost">
-                      <TrashIcon className="size-4" />
-                      <span className="sr-only">Excluir Nota</span>
-                    </Button>
-                  </ConfirmDialogTrigger>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="icon" className="h-8 p-0" variant="outline">
+                        <EllipsisIcon className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="end">
+                      <form action={createLinkAction}>
+                        <input name="id" value={note.id} hidden readOnly />
+                        <DropdownMenuItem className="p-0">
+                          <SubmitButton
+                            variant="ghost"
+                            className="hover:ring-0 px-2 h-8"
+                          >
+                            <SendIcon className="size-4" />
+                            Compartilhar
+                          </SubmitButton>
+                        </DropdownMenuItem>
+                      </form>
+
+                      <DropdownMenuItem asChild>
+                        <Link
+                          href={`/${note.id}/edit`}
+                          className="text-xs cursor-pointer"
+                        >
+                          <PenIcon className="size-4" />
+                          Editar
+                        </Link>
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem asChild>
+                        <ConfirmDialogTrigger>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="w-full h-8 px-2 justify-start"
+                          >
+                            <TrashIcon className="size-4" />
+                            Excluir
+                          </Button>
+                        </ConfirmDialogTrigger>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
                   <ConfirmDialogContent>
                     <ConfirmDialogHeader>
