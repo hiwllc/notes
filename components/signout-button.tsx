@@ -9,13 +9,11 @@ async function signOutAction() {
 
 export function SignOutButton() {
 	return (
-		<form action={signOutAction}>
-			<Button
-				size="sm"
-				type="submit"
-				variant="ghost"
-				className="w-fit h-12 justify-center flex-1 lg:flex-auto"
-			>
+		<form
+			action={signOutAction}
+			className="flex w-full flex-1 lg:w-fit h-12 justify-center items-center lg:flex-auto"
+		>
+			<Button size="sm" type="submit" variant="ghost">
 				<LogOutIcon className="size-4" />{" "}
 				<span className="hidden lg:inline">Sair</span>
 			</Button>

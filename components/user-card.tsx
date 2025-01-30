@@ -16,10 +16,10 @@ const getInitialFromName = (name: string) =>
 
 export function UserButton({ user, notes = 0 }: Props) {
 	return (
-		<div className="w-full flex items-start gap-2">
+		<div className="flex w-full items-center gap-2 bg-muted-foreground/5 p-2 rounded-md">
 			<Avatar>
 				<AvatarImage src={user.image || ""} />
-				<AvatarFallback>
+				<AvatarFallback className="bg-foreground/10 leading-none text-xs">
 					{getInitialFromName(user.name as string)}
 				</AvatarFallback>
 			</Avatar>
