@@ -11,36 +11,22 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const session = await auth();
-  const note = await prisma.note.findUnique({
-    where: {
-      id: params.note,
-      OR: [
-        { visibility: "PUBLIC", status: "PUBLISHED" },
-        { userId: session?.user?.id },
-      ],
-    },
+  const note = await prisma.note.findFirst({
+    where: { token: params.note },
     select: {
       title: true,
     },
   });
-
-  if (!note) {
-    return {
-      title: "Nota não encontrada | Overnote",
-    };
-  }
 
   return {
     title: `${note?.title} | Overnote`,
   };
 }
 
-async function getNote(id: string, user?: string) {
+async function getNote(id: string) {
   return await prisma.note.findFirst({
     where: {
-      id,
-      OR: [{ visibility: "PUBLIC", status: "PUBLISHED" }, { userId: user }],
+      token: id,
     },
     select: {
       id: true,
@@ -62,7 +48,7 @@ async function getNote(id: string, user?: string) {
 
 export default async function NotePage({ params }: Props) {
   const session = await auth();
-  const note = await getNote(params.note, session?.user?.id);
+  const note = await getNote(params.note);
 
   if (!note) {
     return notFound();
