@@ -1,7 +1,6 @@
 import { NoteCard } from "@/components/note";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { requireAuthenticatedUser } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -12,10 +11,8 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const { id } = await requireAuthenticatedUser();
-
 	const note = await prisma.note.findUnique({
-		where: { id: params.note, userId: id },
+		where: { id: params.note },
 		select: {
 			title: true,
 		},
