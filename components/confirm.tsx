@@ -1,5 +1,3 @@
-import { TrashIcon } from "lucide-react";
-import { Button } from "./ui/button";
 import {
   Dialog,
   DialogClose,

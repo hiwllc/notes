@@ -16,29 +16,29 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "Overnote",
-	description: "Crie e compartilhe suas notas",
+  title: "Overnote",
+  description: "Crie e compartilhe suas notas",
 };
 
 export default async function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	const theme = await getTheme();
+  const theme = await getTheme();
 
-	return (
-		<html
-			lang="pt-BR"
-			className={theme}
-			style={{ colorScheme: theme }}
-			suppressHydrationWarning
-		>
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-			>
-				{children}
-			</body>
-		</html>
-	);
+  return (
+    <html
+      lang="pt-BR"
+      className={theme}
+      style={{ colorScheme: theme }}
+      suppressHydrationWarning
+    >
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
+    </html>
+  );
 }
