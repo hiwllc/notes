@@ -1,6 +1,7 @@
 import { NoteCard } from "@/components/note";
 import { prisma } from "@/lib/prisma";
 import { requireAuthenticatedUser } from "@/lib/utils";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 async function getAllNotesFromUser(user: string) {
@@ -27,6 +28,22 @@ async function getAllNotesFromUser(user: string) {
 			createdAt: "desc",
 		},
 	});
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+	const { id } = await requireAuthenticatedUser();
+
+	const user = await prisma.user.findUnique({
+		where: { id },
+		select: {
+			name: true,
+		},
+	});
+
+	return {
+		title: `${user?.name} | Overnote`,
+		description: "Crie e compartilhe suas notas",
+	};
 }
 
 export default async function ProfilePage() {

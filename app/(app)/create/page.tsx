@@ -1,5 +1,10 @@
 import { requireAuthenticatedUser } from "@/lib/utils";
 import { CreateNoteForm } from "./components/create-note-form";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Nova nota | Overnote",
+};
 
 export default async function CreateNotePage() {
 	await requireAuthenticatedUser();
