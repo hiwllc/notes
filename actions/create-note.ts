@@ -6,34 +6,59 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const noteSchema = z.object({
-	title: z.string().min(1, "Sua nota precisa de um nome"),
-	content: z.string(),
-	visibility: z.boolean(),
+  id: z.string().optional(),
+  title: z.string().min(1, "Sua nota precisa de um nome"),
+  content: z.string(),
+  visibility: z.boolean(),
+  status: z.enum(["PUBLISHED", "DRAFT"]),
 });
 
 export async function createNoteAction(payload: z.infer<typeof noteSchema>) {
-	const parse = noteSchema.safeParse(payload);
-	const sessions = await auth();
+  const parse = noteSchema.safeParse(payload);
+  const sessions = await auth();
 
-	if (!sessions?.user?.id) {
-		throw new Error("Unauthorized");
-	}
+  if (!sessions?.user?.id) {
+    throw new Error("Unauthorized");
+  }
 
-	if (parse.error) {
-		throw new Error("Invalid Payload");
-	}
+  if (parse.error) {
+    throw new Error("Invalid Payload");
+  }
 
-	const { data } = parse;
+  const { data } = parse;
 
-	const { id } = await prisma.note.create({
-		data: {
-			content: data.content,
-			title: data.title,
-			visibility: data.visibility ? "PUBLIC" : "PRIVATE",
-			userId: sessions.user.id,
-			status: "PUBLISHED",
-		},
-	});
+  const note = await prisma.note.upsert({
+    create: {
+      content: data.content,
+      title: data.title,
+      visibility: data.visibility ? "PUBLIC" : "PRIVATE",
+      userId: sessions.user.id,
+      status: data.status,
+    },
+    update: {
+      title: data.title,
+      content: data.content,
+      visibility: data.visibility ? "PUBLIC" : "PRIVATE",
+      status: data.status,
+      updatedAt: new Date(),
+    },
+    where: {
+      id: data.id,
+      userId: sessions.user.id,
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      visibility: true,
+      updatedAt: true,
+      createdAt: true,
+    },
+  });
 
-	redirect(`/${id}`);
+  if (data.status === "PUBLISHED") {
+    return redirect(`/${note.id}`);
+  }
+
+  return { data: note };
 }
