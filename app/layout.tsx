@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { getTheme } from "@/actions/theme";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,18 +20,25 @@ export const metadata: Metadata = {
 	description: "Crie e compartilhe suas notas",
 };
 
-export default function RootLayout({
-  children,
+export default async function RootLayout({
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-			<html lang="pt-BR">
-				<body
-					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-				>
-					{children}
-				</body>
-			</html>
-		);
+	const theme = await getTheme();
+
+	return (
+		<html
+			lang="pt-BR"
+			className={theme}
+			style={{ colorScheme: theme }}
+			suppressHydrationWarning
+		>
+			<body
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+			>
+				{children}
+			</body>
+		</html>
+	);
 }

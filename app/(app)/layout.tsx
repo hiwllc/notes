@@ -1,4 +1,5 @@
 import {
+	MoonIcon,
 	MoveRightIcon,
 	NotebookTextIcon,
 	SearchIcon,
@@ -10,6 +11,7 @@ import { NavMain } from "@/components/nav-main";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getTheme, setTheme } from "@/actions/theme";
 
 async function getUserNotesCount(user?: string) {
 	if (!user) {
@@ -24,6 +26,7 @@ export default async function AppLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+  const theme = await getTheme();
 	const session = await auth();
   const notes = await getUserNotesCount(session?.user?.id);
 
@@ -43,19 +46,26 @@ export default async function AppLayout({
 							className="w-full flex-1 h-6 px-2 bg-transparent focus:outline-none text-sm"
 							placeholder="Digite para pesquisar..."
 						/>
+
 						<Button size="icon" className="size-6 p-0" variant="ghost">
 							<SearchIcon className="size-4" />
 						</Button>
 					</div>
 
-					<Button
-						className="size-8 p-0 row-start-1 ml-auto"
-						size="icon"
-						variant="outline"
-					>
-						<SunIcon className="size-4" />
-						<span className="sr-only">Alternar Tema</span>
-					</Button>
+					<form action={setTheme} className="row-start-1 ml-auto">
+						<input
+							name="theme"
+							value={theme === "light" ? "dark" : "light"}
+							hidden
+							readOnly
+						/>
+
+						<Button className="size-8 p-0" size="icon" variant="outline">
+							<SunIcon className="size-4 scale-100 rotate-0 dark:scale-0 dark:-rotate-90 transition-transform" />
+							<MoonIcon className="size-4 absolute scale-0 rotate-90 dark:scale-100 dark:rotate-0 transition-transform" />
+							<span className="sr-only">Alternar Tema</span>
+						</Button>
+					</form>
 				</div>
 			</header>
 

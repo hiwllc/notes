@@ -3,7 +3,6 @@
 import { useFormStatus } from "react-dom";
 import { Button, type ButtonProps } from "./ui/button";
 import { LoaderIcon } from "lucide-react";
-import { useFormState } from "react-hook-form";
 
 export function SubmitButton({
 	children,
