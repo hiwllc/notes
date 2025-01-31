@@ -42,8 +42,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
@@ -54,6 +52,11 @@ type Props = {
   > & { user: Pick<User, "id" | "email" | "name"> };
   isOwner?: boolean;
 };
+
+const APP_DOMAIN =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://notes.iamwallace.dev/";
 
 export function NoteCard({ note, isOwner }: Props) {
   const { copied, copy } = useCopyToClipboard();
@@ -217,14 +220,16 @@ export function NoteCard({ note, isOwner }: Props) {
             O seu link de compartilhamento foi gerado com sucesso, sua nota pode
             ser acessada no seguinte link:
             <code className="inline-flex bg-muted-foreground/5 p-1 rounded-md my-2">
-              http://localhost:3000/shared/{state.data.token}
+              {APP_DOMAIN}/shared/{state.data.token}
             </code>
           </ConfirmDialogDescription>
 
           <ConfirmDialogFooter>
             <Button
               size="sm"
-              onClick={() => copy(state.data.token as string)}
+              onClick={() =>
+                copy(`${APP_DOMAIN}/shared/${state.data.token as string}`)
+              }
               disabled={Boolean(copied)}
             >
               {copied ? (
