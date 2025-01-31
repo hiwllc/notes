@@ -1,6 +1,6 @@
 "use client";
 
-import { Editor } from "@/components/editor";
+import { Editor, type EditorRef } from "@/components/editor";
 import {
   Form,
   FormControl,
@@ -20,16 +20,8 @@ import { useEffect, useRef, useState } from "react";
 import { CheckIcon, LoaderIcon } from "lucide-react";
 import { intlFormatDistance } from "date-fns";
 import type { Note } from "@prisma/client";
-import {
-  ConfirmDialog,
-  ConfirmDialogClose,
-  ConfirmDialogContent,
-  ConfirmDialogDescription,
-  ConfirmDialogFooter,
-  ConfirmDialogHeader,
-  ConfirmDialogTitle,
-} from "@/components/confirm";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const noteFormSchema = z.object({
   id: z.string().optional(),
@@ -46,16 +38,17 @@ type Props = {
 };
 
 export function CreateNoteForm({ draft }: Props) {
+  const editorRef = useRef<EditorRef>(null);
   const [saving, setSaving] = useState(false);
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
-  const [confirmOpen, setConfirmOpen] = useState(Boolean(draft));
+  const [showAlert, setShowAlert] = useState(Boolean(draft));
 
   const form = useForm<z.infer<typeof noteFormSchema>>({
     defaultValues: {
-      id: "",
-      title: "",
-      content: "",
-      visibility: true,
+      id: draft?.id ?? "",
+      title: draft?.title ?? "",
+      content: draft?.content ?? "",
+      visibility: (draft?.visibility && draft.visibility === "PUBLIC") ?? true,
     },
     resolver: zodResolver(noteFormSchema),
   });
@@ -102,6 +95,36 @@ export function CreateNoteForm({ draft }: Props) {
 
   return (
     <>
+      {showAlert ? (
+        <Alert className="space-y-">
+          <AlertTitle className="font-semibold">Rascunho recuperado</AlertTitle>
+          <AlertDescription className="flex justify-between items-center">
+            <p className="text-foreground/70">
+              O rascunho da nota {draft?.title} foi recuperado
+            </p>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                form.reset({
+                  id: "",
+                  title: "",
+                  content: "",
+                  visibility: true,
+                });
+
+                editorRef.current?.update("");
+
+                setShowAlert(false);
+              }}
+            >
+              Descartar
+            </Button>
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(submit)}>
           <FormField
@@ -137,79 +160,44 @@ export function CreateNoteForm({ draft }: Props) {
           <FormField
             control={form.control}
             name="content"
-            render={({ field }) => (
-              <FormItem>
-                <div className="h-4  flex justify-between items-center">
-                  <FormLabel>Conteúdo</FormLabel>
-                  <div>
-                    {saving ? (
-                      <small className="inline-flex items-center gap-2 text-muted-foreground">
-                        <LoaderIcon className="size-4 animate-spin" />{" "}
-                        Salvando...
-                      </small>
-                    ) : null}
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <div className="h-4  flex justify-between items-center">
+                    <FormLabel>Conteúdo</FormLabel>
+                    <div>
+                      {saving ? (
+                        <small className="inline-flex items-center gap-2 text-muted-foreground">
+                          <LoaderIcon className="size-4 animate-spin" />{" "}
+                          Salvando...
+                        </small>
+                      ) : null}
 
-                    {!saving && updatedAt ? (
-                      <small className="inline-flex items-center gap-2 text-muted-foreground">
-                        <CheckIcon className="size-4" /> Salvo{" "}
-                        {intlFormatDistance(updatedAt, new Date(), {
-                          locale: "pt-BR",
-                        })}
-                      </small>
-                    ) : null}
+                      {!saving && updatedAt ? (
+                        <small className="inline-flex items-center gap-2 text-muted-foreground">
+                          <CheckIcon className="size-4" /> Salvo{" "}
+                          {intlFormatDistance(updatedAt, new Date(), {
+                            locale: "pt-BR",
+                          })}
+                        </small>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-                <FormControl>
-                  <Editor onChange={field.onChange} value={field.value} />
-                </FormControl>
-              </FormItem>
-            )}
+                  <FormControl>
+                    <Editor
+                      ref={editorRef}
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </FormControl>
+                </FormItem>
+              );
+            }}
           />
 
           <StatusButton className="w-full">Criar Nota</StatusButton>
         </form>
       </Form>
-
-      {draft ? (
-        <ConfirmDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-          <ConfirmDialogContent>
-            <ConfirmDialogHeader>
-              <ConfirmDialogTitle>
-                Continuar editando: {draft.title}
-              </ConfirmDialogTitle>
-
-              <ConfirmDialogDescription>
-                Sua nota {draft.title} está salva como rascunho, deseja
-                continuar editando?
-              </ConfirmDialogDescription>
-            </ConfirmDialogHeader>
-
-            <ConfirmDialogFooter>
-              <ConfirmDialogClose>
-                <Button variant="secondary" size="sm">
-                  Não
-                </Button>
-              </ConfirmDialogClose>
-
-              <Button
-                size="sm"
-                onClick={() => {
-                  form.setValue("id", draft.id);
-                  form.setValue("title", draft.title);
-                  form.setValue("content", draft.content);
-                  form.setValue("visibility", draft.visibility === "PUBLIC");
-
-                  setUpdatedAt(draft.updatedAt ?? draft.createdAt);
-
-                  setConfirmOpen(false);
-                }}
-              >
-                Sim
-              </Button>
-            </ConfirmDialogFooter>
-          </ConfirmDialogContent>
-        </ConfirmDialog>
-      ) : null}
     </>
   );
 }
