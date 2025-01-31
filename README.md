@@ -35,7 +35,8 @@ strings aleatórias, mas ai eu precisaria manualmente lidar com possíveis dupli
 Agora eu gostaria de falar o que eu acredito que falta, ou que eu gostaria de implementar para deixar essa aplicação pronta para produção.
 
 Acredito que a primeira coisa que eu faria seria escrever testes e2e com playwright, dessa forma seria simples validar o fluxo do usuário e poderia detectar,
-possíveis bugs e problemas de usabilidade, além de validar a acessibilidade da aplicação.
+possíveis bugs e problemas de usabilidade, além de validar a acessibilidade da aplicação, eu também tentaria abstrair melhor o uso de queries para tentar
+evitar algumas repetições, talvez centralizar todas as queries em algo como `models/notes.ts` e aqui deixar os tipos e queries.
 
 Além dos testes eu também adicionaria mais funcionalidades no editor (eu deixei poucas opções de formatação apenas para não tomar muito tempo do desenvolvimento), mas
 certamente gostaria de ter um editor com mais funcionalidades, links, tabela, imagems, código, etc.
