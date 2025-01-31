@@ -15,6 +15,7 @@ async function getAllNotes(user?: string) {
       createdAt: true,
       status: true,
       visibility: true,
+      token: true,
       user: {
         select: {
           id: true,

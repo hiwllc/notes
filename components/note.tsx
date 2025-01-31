@@ -11,9 +11,11 @@ import {
 import Link from "next/link";
 import { Button } from "./ui/button";
 import {
+  CopyCheck,
   CopyCheckIcon,
   CopyIcon,
   EllipsisIcon,
+  LinkIcon,
   PenIcon,
   SendIcon,
   TrashIcon,
@@ -48,7 +50,7 @@ import {
 type Props = {
   note: Pick<
     Note,
-    "id" | "title" | "content" | "createdAt" | "status" | "visibility"
+    "id" | "title" | "content" | "createdAt" | "status" | "visibility" | "token"
   > & { user: Pick<User, "id" | "email" | "name"> };
   isOwner?: boolean;
 };
@@ -56,7 +58,7 @@ type Props = {
 const APP_DOMAIN =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : "https://notes.iamwallace.dev/";
+    : "https://notes.iamwallace.dev";
 
 export function NoteCard({ note, isOwner }: Props) {
   const { copied, copy } = useCopyToClipboard();
@@ -136,18 +138,44 @@ export function NoteCard({ note, isOwner }: Props) {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                      <form action={createLinkAction}>
-                        <input name="id" value={note.id} hidden readOnly />
+                      {note.token ? (
                         <DropdownMenuItem className="p-0">
-                          <SubmitButton
+                          <Button
                             variant="ghost"
                             className="hover:ring-0 px-2 h-8"
+                            onClick={() =>
+                              copy(`${APP_DOMAIN}/shared/${note.token}`)
+                            }
                           >
-                            <SendIcon className="size-4" />
-                            Compartilhar
-                          </SubmitButton>
+                            {copied ? (
+                              <>
+                                <CopyCheck className="size-4" />
+                                Copiado!
+                              </>
+                            ) : (
+                              <>
+                                <LinkIcon className="size-4" />
+                                Copiar Link
+                              </>
+                            )}
+                          </Button>
                         </DropdownMenuItem>
-                      </form>
+                      ) : null}
+
+                      {!note.token ? (
+                        <form action={createLinkAction}>
+                          <input name="id" value={note.id} hidden readOnly />
+                          <DropdownMenuItem className="p-0">
+                            <SubmitButton
+                              variant="ghost"
+                              className="hover:ring-0 px-2 h-8"
+                            >
+                              <SendIcon className="size-4" />
+                              Compartilhar
+                            </SubmitButton>
+                          </DropdownMenuItem>
+                        </form>
+                      ) : null}
 
                       <DropdownMenuItem asChild>
                         <Link

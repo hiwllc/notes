@@ -49,6 +49,7 @@ async function getNote(id: string, user?: string) {
       createdAt: true,
       status: true,
       visibility: true,
+      token: true,
       user: {
         select: {
           id: true,
